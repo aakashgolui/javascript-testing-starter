@@ -23,3 +23,12 @@ export const getProductOfNums = (nums) => {
   if (!nums.length) return NaN;
   return nums.reduce((acc, val) => acc * val, 1);
 };
+
+export const factorial = (n) => {
+  if (n < 0) return undefined;
+
+  return Array.from({ length: n }, (_, indx) => indx + 1).reduce(
+    (acc, val) => acc * val,
+    1
+  );
+};

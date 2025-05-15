@@ -4,6 +4,7 @@ import {
   max,
   calculateAverage,
   getProductOfNums,
+  factorial,
 } from "../src/intro";
 
 describe("max", () => {
@@ -71,5 +72,15 @@ describe("getProductOfNums", () => {
 
   it("should return product of three number", () => {
     expect(getProductOfNums([1, 2, 3])).toBe(6);
+  });
+});
+
+describe("factorial", () => {
+  it("should return undefined if input is less than 0", () => {
+    expect(factorial(-1)).toBe(undefined);
+  });
+
+  it("should return 120 if input is 5", () => {
+    expect(factorial(5)).toBe(120);
   });
 });
