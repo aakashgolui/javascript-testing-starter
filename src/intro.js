@@ -10,3 +10,16 @@ export function fizzBuzz(n) {
   if (n % 5 === 0) result += "Buzz";
   return result || n.toString();
 }
+
+export function calculateAverage(nums) {
+  if (nums.length) {
+    const sum = nums.reduce((acc, val) => acc + val, 0);
+    return sum / nums.length;
+  }
+  return NaN;
+}
+
+export const getProductOfNums = (nums) => {
+  if (!nums.length) return NaN;
+  return nums.reduce((acc, val) => acc * val, 1);
+};

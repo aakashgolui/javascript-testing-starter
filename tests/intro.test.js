@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { fizzBuzz, max } from "../src/intro";
+import {
+  fizzBuzz,
+  max,
+  calculateAverage,
+  getProductOfNums,
+} from "../src/intro";
 
 describe("max", () => {
   it("should return teh first augument if it is greater than second", () => {
@@ -30,5 +35,41 @@ describe("fizzbuzz", () => {
 
   it("should return string if n is not divisable by any of them", () => {
     expect(fizzBuzz(8)).toBe("8");
+  });
+});
+
+describe("calculateAverage", () => {
+  it("should return NaN if given an empty array", () => {
+    expect(calculateAverage([])).toBe(NaN);
+  });
+
+  it("should calculate the average with single element", () => {
+    expect(calculateAverage([1])).toBe(1);
+  });
+
+  it("should calculate the average with two elements", () => {
+    expect(calculateAverage([1, 2])).toBe(1.5);
+  });
+
+  it("should calculate the average with three elements", () => {
+    expect(calculateAverage([1, 2, 3])).toBe(2);
+  });
+});
+
+describe("getProductOfNums", () => {
+  it("should return NaN if not input provided", () => {
+    expect(getProductOfNums([])).toBe(NaN);
+  });
+
+  it("should return the 0th element if one element is provided", () => {
+    expect(getProductOfNums([2])).toBe(2);
+  });
+
+  it("should return product of two number", () => {
+    expect(getProductOfNums([1, 2])).toBe(2);
+  });
+
+  it("should return product of three number", () => {
+    expect(getProductOfNums([1, 2, 3])).toBe(6);
   });
 });
