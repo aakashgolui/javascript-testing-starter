@@ -26,9 +26,7 @@ export const getProductOfNums = (nums) => {
 
 export const factorial = (n) => {
   if (n < 0) return undefined;
+  if (n === 0 || n === 1) return 1;
 
-  return Array.from({ length: n }, (_, indx) => indx + 1).reduce(
-    (acc, val) => acc * val,
-    1
-  );
+  return n * factorial(n - 1);
 };

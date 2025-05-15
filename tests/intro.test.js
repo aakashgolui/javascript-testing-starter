@@ -80,6 +80,18 @@ describe("factorial", () => {
     expect(factorial(-1)).toBe(undefined);
   });
 
+  it("should return 1 if input is 0", () => {
+    expect(factorial(0)).toBe(1);
+  });
+
+  it("should return 1 if input is 1", () => {
+    expect(factorial(2)).toBe(2);
+  });
+
+  it("should return 2 if input is 2", () => {
+    expect(factorial(2)).toBe(2);
+  });
+
   it("should return 120 if input is 5", () => {
     expect(factorial(5)).toBe(120);
   });
