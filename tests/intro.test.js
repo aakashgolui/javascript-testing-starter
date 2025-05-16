@@ -77,7 +77,7 @@ describe("getProductOfNums", () => {
 
 describe("factorial", () => {
   it("should return undefined if input is less than 0", () => {
-    expect(factorial(-1)).toBe(undefined);
+    expect(factorial(-1)).toBeUndefined();
   });
 
   it("should return 1 if input is 0", () => {
