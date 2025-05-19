@@ -9,19 +9,24 @@ describe("getCoupons", () => {
     expect(coupons.length).toBeGreaterThan(0);
   });
 
-  it("should return a array of coupons", () => {
+  it("should return an array with valid coupon codes", () => {
     const coupons = getCoupons();
 
     coupons.forEach((coupon) => {
       expect(coupon).haveOwnProperty("code");
-      expect(coupon).haveOwnProperty("discount");
+      expect(typeof coupon.code).toBe("string");
+      expect(coupon.code).toBeTruthy();
     });
   });
 
-  it("should have eky with proper data type", () => {
+  it("should return an array with valid discounts", () => {
     const coupons = getCoupons();
 
-    expect(typeof coupons[0].code).toBe("string");
-    expect(typeof coupons[0].discount).toBe("number");
+    coupons.forEach((coupon) => {
+      expect(coupon).haveOwnProperty("discount");
+      expect(typeof coupon.discount).toBe("number");
+      expect(coupon.discount).toBeGreaterThan(0);
+      expect(coupon.discount).toBeLessThan(1);
+    });
   });
 });
