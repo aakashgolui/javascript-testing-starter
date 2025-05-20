@@ -1,6 +1,7 @@
 import {
   calculateDiscount,
   canDrive,
+  fetchData,
   getCoupons,
   isPriceInRange,
   isValidUsername,
@@ -93,18 +94,14 @@ describe("validateUserInput", () => {
 });
 
 describe("isPriceInRange", () => {
-  it("should return false if price is outside of range", () => {
-    expect(isPriceInRange(-10, 0, 100)).toBeFalsy();
-    expect(isPriceInRange(200, 0, 100)).toBeFalsy();
-  });
-
-  it("should return true if price is equal to min or max", () => {
-    expect(isPriceInRange(0, 0, 100)).toBe(true);
-    expect(isPriceInRange(100, 0, 100)).toBe(true);
-  });
-
-  it("should return true if price is within the range", () => {
-    expect(isPriceInRange(20, 0, 100)).toBe(true);
+  it.each([
+    { value: -10, result: false, scenario: "price < min" },
+    { value: 0, result: true, scenario: "price = min" },
+    { value: 20, result: true, scenario: "price > min and < max" },
+    { value: 100, result: true, scenario: "price = max" },
+    { value: 200, result: false, scenario: "price > max" },
+  ])("should return $result if $scenario", ({ result, value }) => {
+    expect(isPriceInRange(value, 0, 100)).toBe(result);
   });
 });
 
@@ -135,27 +132,22 @@ describe("canDrive", () => {
     expect(canDrive(12, "IN")).toMatch(/invalid/i);
   });
 
-  it("should return false for underage in US", () => {
-    expect(canDrive(15, "US")).toBe(false);
+  it.each([
+    { age: 15, country: "US", result: false },
+    { age: 16, country: "US", result: true },
+    { age: 17, country: "US", result: true },
+    { age: 16, country: "UK", result: false },
+    { age: 17, country: "UK", result: true },
+    { age: 18, country: "UK", result: true },
+  ])("should return $result for $age, $country", ({ age, country, result }) => {
+    expect(canDrive(age, country)).toBe(result);
   });
+});
 
-  it("should return true for min age in the US", () => {
-    expect(canDrive(16, "US")).toBe(true);
-  });
-
-  it("should return true for eligible in the US", () => {
-    expect(canDrive(17, "US")).toBe(true);
-  });
-
-  it("should return false for underage in UK", () => {
-    expect(canDrive(16, "UK")).toBe(false);
-  });
-
-  it("should return true for min age in the UK", () => {
-    expect(canDrive(17, "UK")).toBe(true);
-  });
-
-  it("should return true for eligible in the UL", () => {
-    expect(canDrive(18, "US")).toBe(true);
+describe("fetchData", () => {
+  it("should return a promise which will resolved to an array", async () => {
+    const result = await fetchData();
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
   });
 });
