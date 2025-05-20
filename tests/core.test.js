@@ -1,5 +1,6 @@
 import {
   calculateDiscount,
+  canDrive,
   getCoupons,
   isPriceInRange,
   isValidUsername,
@@ -121,10 +122,40 @@ describe("isValidUsername", () => {
   });
 
   it("should return true if username length is within the range", () => {
-    expect(isValidUsername("akashgolui")).toBe(true);
+    expect(isValidUsername("aakashgolui")).toBe(true);
   });
 
   it("should return invalid if username is not a string", () => {
-    expect(isValidUsername(0)).toMatch(/invalid/i);
+    expect(isValidUsername(null)).toBe(false);
+  });
+});
+
+describe("canDrive", () => {
+  it("should throw error if country code is invalid", () => {
+    expect(canDrive(12, "IN")).toMatch(/invalid/i);
+  });
+
+  it("should return false for underage in US", () => {
+    expect(canDrive(15, "US")).toBe(false);
+  });
+
+  it("should return true for min age in the US", () => {
+    expect(canDrive(16, "US")).toBe(true);
+  });
+
+  it("should return true for eligible in the US", () => {
+    expect(canDrive(17, "US")).toBe(true);
+  });
+
+  it("should return false for underage in UK", () => {
+    expect(canDrive(16, "UK")).toBe(false);
+  });
+
+  it("should return true for min age in the UK", () => {
+    expect(canDrive(17, "UK")).toBe(true);
+  });
+
+  it("should return true for eligible in the UL", () => {
+    expect(canDrive(18, "US")).toBe(true);
   });
 });
