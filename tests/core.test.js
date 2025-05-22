@@ -1,9 +1,11 @@
 import {
   calculateDiscount,
   canDrive,
+  createProduct,
   fetchData,
   getCoupons,
   isPriceInRange,
+  isStrongPassword,
   isValidUsername,
   Stack,
   validateUserInput,
@@ -212,5 +214,61 @@ describe("Stack", () => {
     stack.clear();
 
     expect(stack.size()).toBe(0);
+  });
+});
+
+describe("createProduct", () => {
+  it.each([
+    {
+      product: { price: 10 },
+      expResult: false,
+      message: "Name is missing",
+    },
+    {
+      product: { name: "Akash", price: -10 },
+      expResult: false,
+      message: "Price is missing",
+    },
+  ])("should throw error if $message", ({ product, expResult }) => {
+    const result = createProduct(product);
+
+    expect(result.success).toBe(expResult);
+    expect(result.error.message).toMatch(/missing/i);
+    expect(result.error.code).toMatch(/invalid/i);
+  });
+
+  it("should create a product upon giving correct input", () => {
+    const result = createProduct({ name: "Candy", price: 20 });
+
+    expect(result.success).toBe(true);
+    expect(result.message).toMatch(/success/i);
+  });
+});
+
+describe("isStrongPassword", () => {
+  it.each([
+    { expResult: false, input: "akash", message: "min length is less than 8" },
+    {
+      expResult: false,
+      input: "akashgolui",
+      message: "not contain minimum one uppercase character",
+    },
+    {
+      expResult: false,
+      input: "AKASHGOLUI",
+      message: "not contain minimum one lowercase character",
+    },
+    {
+      expResult: false,
+      input: "AkashGolui",
+      message: "not contain minimum one numeric digit",
+    },
+    {
+      expResult: true,
+      input: "AkashGolui@123",
+      message: "password is correct",
+    },
+  ])("should return $expResult if $message", ({ expResult, input }) => {
+    expect(isStrongPassword(input)).toBe(expResult);
   });
 });
