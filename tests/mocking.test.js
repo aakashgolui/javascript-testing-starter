@@ -1,19 +1,30 @@
-import { vi, it, expect, describe } from "vitest";
+import { vi, it, expect, describe, beforeEach } from "vitest";
 import {
   getPriceInCurrency,
   getShippingInfo,
+  login,
   renderPage,
+  signUp,
   submitOrder,
 } from "../src/mocking";
 import { getExchangeRate } from "../src/libs/currency";
 import { getShippingQuote } from "../src/libs/shipping";
 import { trackPageView } from "../src/libs/analytics";
 import { charge } from "../src/libs/payment";
+import { isValidEmail, sendEmail } from "../src/libs/email";
+import security from "../src/libs/security";
 
 vi.mock("../src/libs/currency");
 vi.mock("../src/libs/shipping");
 vi.mock("../src/libs/analytics");
 vi.mock("../src/libs/payment");
+vi.mock("../src/libs/email", async (importOriginal) => {
+  const originalModule = await importOriginal();
+  return {
+    ...originalModule,
+    sendEmail: vi.fn(),
+  };
+});
 
 describe("mock test suit", () => {
   it("sendText", () => {
@@ -97,5 +108,63 @@ describe("submitOrder", () => {
     const result = await submitOrder(order, creditCard);
 
     expect(result).toEqual({ success: true });
+  });
+});
+
+describe("signUp", () => {
+  const email = "akash@gmail.com";
+  it("should return false if email is not valid", async () => {
+    const result = await signUp("abkbk");
+    expect(result).toBe(false);
+  });
+
+  it("should return true if email is valid", async () => {
+    const result = await signUp(email);
+
+    expect(result).toBe(true);
+  });
+
+  it("should return sent the welcome email if email is valid", async () => {
+    await signUp(email);
+
+    expect(sendEmail).toHaveBeenCalled();
+    const args = vi.mocked(sendEmail).mock.calls[0];
+
+    expect(args[0]).toBe(email);
+    expect(args[1]).toMatch(/welcome/i);
+  });
+});
+
+describe("login", () => {
+  it("should email the one-time validation code", async () => {
+    const email = "akash@gmail.com";
+    const spy = vi.spyOn(security, "generateCode");
+
+    await login(email);
+
+    const security_code = spy.mock.results[0].value;
+    expect(sendEmail).toHaveBeenCalledWith(email, security_code.toString());
+  });
+});
+
+describe("signUp", () => {
+  const email = "akash@gmail.com";
+
+  it("should return false if email is invalid", async () => {
+    const result = await signUp("a");
+
+    expect(result).toBe(false);
+  });
+
+  it("should return true if email is valid", async () => {
+    const result = await signUp(email);
+
+    expect(result).toBe(true);
+  });
+
+  it("should send the welcome email if email is valid", async () => {
+    await signUp(email);
+
+    expect(sendEmail).toHaveBeenCalledOnce();
   });
 });
