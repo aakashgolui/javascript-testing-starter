@@ -1,4 +1,4 @@
-import { vi, it, expect, describe, beforeEach } from 'vitest';
+import { vi, it, expect, describe } from 'vitest';
 import {
   getDiscount,
   getPriceInCurrency,
@@ -13,7 +13,7 @@ import { getExchangeRate } from '../src/libs/currency';
 import { getShippingQuote } from '../src/libs/shipping';
 import { trackPageView } from '../src/libs/analytics';
 import { charge } from '../src/libs/payment';
-import { isValidEmail, sendEmail } from '../src/libs/email';
+import { sendEmail } from '../src/libs/email';
 import security from '../src/libs/security';
 
 vi.mock('../src/libs/currency');
