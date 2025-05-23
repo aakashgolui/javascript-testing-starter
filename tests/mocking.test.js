@@ -1,7 +1,9 @@
 import { vi, it, expect, describe, beforeEach } from "vitest";
 import {
+  getDiscount,
   getPriceInCurrency,
   getShippingInfo,
+  isOnline,
   login,
   renderPage,
   signUp,
@@ -166,5 +168,37 @@ describe("signUp", () => {
     await signUp(email);
 
     expect(sendEmail).toHaveBeenCalledOnce();
+  });
+});
+
+describe("isOnline", () => {
+  it("should return false if current hour is outside of opening hours", () => {
+    vi.setSystemTime("2025-5-23 7:59");
+    expect(isOnline()).toBe(false);
+
+    vi.setSystemTime("2025-5-23 20:01");
+    expect(isOnline()).toBe(false);
+  });
+
+  it("should return true if the current time is within opening hours", () => {
+    vi.setSystemTime("2025-5-23 8:01");
+    expect(isOnline()).toBe(true);
+
+    vi.setSystemTime("2025-5-23 19:59");
+    expect(isOnline()).toBe(true);
+  });
+});
+
+describe("getDiscount", () => {
+  it("should give 0.2 if the date is under x-max day", () => {
+    vi.setSystemTime("2025-12-25 8:01");
+
+    expect(getDiscount()).toBe(0.2);
+  });
+
+  it("should give 0 if the date is outside x-max day", () => {
+    vi.setSystemTime("2025-12-26 8:01");
+
+    expect(getDiscount()).toBe(0);
   });
 });
