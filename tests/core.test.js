@@ -68,7 +68,7 @@ describe("calculateDiscount", () => {
 describe("validateUserInput", () => {
   it("should return validation successful if correct input given", () => {
     expect(validateUserInput("aakashgolui", 27)).toMatch(
-      /validation successful/i
+      /validation successful/i,
     );
   });
 
